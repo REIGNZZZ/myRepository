@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.reignzzz.mavenssm.dao.UserDao">
+    <select id="getUserByName" resultType="com.reignzzz.mavenssm.entity.User">
+        select * from p_user where username=#{username}
+    </select>
+</mapper>
