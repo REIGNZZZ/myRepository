@@ -6,4 +6,8 @@
     <select id="getUserByName" resultType="com.reignzzz.mavenssm.entity.User">
         select * from p_user where username=#{username}
     </select>
+
+    <insert id="insertUser" parameterType="user">
+        insert into p_user(username,password,phone,createTime,type,status,opLog,faceId)values (#{username},#{password},#{phone},#{createTime},#{type},#{status},#{opLog},#{faceId})
+    </insert>
 </mapper>

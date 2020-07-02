@@ -65,7 +65,15 @@
         <property name="cacheManagerConfigFile" value="classpath:ehcache.xml" />
     </bean>
 
-    <bean id="shiroRealm" class="com.reignzzz.mavenssm.shiro.ShiroRealm" />
+    <bean id="shiroRealm" class="com.reignzzz.mavenssm.shiro.ShiroRealm">
+        <property name="credentialsMatcher" >
+            <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+                <property name="hashAlgorithmName" value="MD5"/>
+                <property name="hashIterations" value="1024" />
+                <property name="storedCredentialsHexEncoded" value="true"/>
+            </bean>
+        </property>
+    </bean>
 
     <!--shiro的拦截规则-->
     <!--注意：这个bean的id必须与在web.xml中配置的shiro拦截器的名称一致-->
@@ -73,7 +81,7 @@
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
         <!--登录页面，未登录情况会跳转至该页面-->
-        <property name="loginUrl" value="/shiros/login.do"/>
+        <property name="loginUrl" value="/shiros/get/login.do"/>
         <!--登录成功后跳转的页面-->
         <property name="successUrl" value="/shiros/index.do"/>
         <!--登录后权限不足跳转的页面-->
@@ -83,7 +91,12 @@
             <value>
                 <!--url路径=拦截规则 anon匿名 authc需登录-->
                 <!--注意：规则是有顺序的，从上到下，拦截范围从小到打，匹配的顺序是从上到下的，匹配到之后后面的规则会忽略-->
-                /shiros/login.do = anon
+                /favicon.ico = anon
+                /shiros/post/login.do = anon
+                /shiros/get/login.do = anon
+                /shiros/register.do = anon
+                /static/** = anon
+                /register.jsp = anon
                 /logout.do = logout
                 /shiros/** = authc
                 /** = authc

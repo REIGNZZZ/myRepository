@@ -11,6 +11,12 @@
 
     <dependencies>
 
+        <!--aes加密-->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.10</version>
+        </dependency>
         <!--spring aop-->
         <dependency>
             <groupId>org.springframework</groupId>

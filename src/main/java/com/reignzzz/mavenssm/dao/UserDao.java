@@ -5,4 +5,6 @@ import org.apache.ibatis.annotations.Param;
 
 public interface UserDao {
     User getUserByName(@Param("username") String username);
+
+    void insertUser(User user);
 }
