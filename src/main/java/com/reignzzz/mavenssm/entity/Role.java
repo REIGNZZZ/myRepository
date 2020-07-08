@@ -1,9 +1,11 @@
 package com.reignzzz.mavenssm.entity;
 
+import java.io.Serializable;
 import java.util.Set;
 
-public class Role {
+public class Role implements Serializable {
 
+    private static final long serialVersionUID = -8334412605002967399L;
     private Long id;
     private String name;
     private String code;

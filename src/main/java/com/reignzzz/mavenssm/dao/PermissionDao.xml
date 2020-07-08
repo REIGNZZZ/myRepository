@@ -20,5 +20,9 @@
         </where>
     </select>
 
+    <select id="getPermissions" resultType="permission">
+        select * from p_permission
+    </select>
+
 
 </mapper>

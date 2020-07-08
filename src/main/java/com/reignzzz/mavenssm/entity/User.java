@@ -5,6 +5,7 @@ import java.util.Set;
 
 public class User implements Serializable {
 
+    private static final long serialVersionUID = -5167393291025148162L;
     private Long id;
     private String username;
     private String password;

@@ -1,7 +1,10 @@
 package com.reignzzz.mavenssm.entity;
 
-public class Permission {
+import java.io.Serializable;
 
+public class Permission implements Serializable {
+
+    private static final long serialVersionUID = -8861953457330540434L;
     private Long id;
     private String name;
     private String code;

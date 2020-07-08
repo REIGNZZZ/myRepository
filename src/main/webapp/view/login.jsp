@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <html>
 <head>
     <title>登录页</title>
@@ -63,10 +64,14 @@
 <form action="${pageContext.request.contextPath}/shiros/login.do" method="post" onsubmit="checkSubmit()">
     用户名：<input type="text" name="username"><br><br>
     密&nbsp;&nbsp;&nbsp;码：<input id="pwd" type="password" name="password"><br><br>
+    <input type="checkbox" name="rememberMe" value="1">7天免登录<br><br>
     <input type="submit" value="登录">
 </form>
 <br><br>
 没有账号？<a href="${pageContext.request.contextPath}/view/register.jsp">申请账号</a>
+ <shiro:guest>
+     <p>测试shiro标签，仅游客可见</p>
+ </shiro:guest>
 
 </body>
 </html>

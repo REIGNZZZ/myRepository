@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import sun.security.provider.MD5;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -56,18 +57,40 @@ public class ShiroRealm extends AuthorizingRealm {
     public static void main(String[] args) {
         SimpleHash simpleHash = new SimpleHash("MD5", "e10adc3949ba59abbe56e057f20f883e", "admin", 1024);
         System.out.println(simpleHash.toString());
+
+        String str = "perms[userlist]";
+        int b = str.indexOf("[")+1;
+        int e = str.indexOf("]");
+        str = str.substring(b, e);
+        System.out.println(str);
+
     }
 
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+        System.out.println("========执行权限验证==========");
         User user = principalCollection.oneByType(User.class);
 //        这里需要一个String类型的集合
         Set<String> roles = roleDao.getRolesByUid(user.getId());
         List<Long> roleIds = roleDao.getRoleIdsByUid(user.getId());
         Set<String> permissions = permissionDao.getCodesByRoleIds(roleIds);
+        Set<String> handlePermissions = new HashSet<String>();
+        for (String code:permissions
+             ) {
+            if (code.contains("[")) {
+                int b = code.indexOf("[") + 1;
+                int e = code.indexOf("]");
+                code = code.substring(b, e);
+                handlePermissions.add(code);
+            } else {
+                handlePermissions.add(code);
+            }
+        }
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         info.addRoles(roles);
-        info.addStringPermissions(permissions);
+        info.addStringPermissions(handlePermissions);
 
         return info;
     }
+
+
 }

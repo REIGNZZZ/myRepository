@@ -72,7 +72,20 @@
                 <ref bean="shiroRealm2"/>
             </list>
         </property>
+        <!--<property name="rememberMeManager.cookie.maxAge" value="604800"/>-->
+        <property name="rememberMeManager">
+            <bean class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+                <property name="cookie">
+                    <bean class="org.apache.shiro.web.servlet.SimpleCookie">
+                        <property name="name" value="rememberMe" />
+                        <property name="maxAge" value="604800"/>
+
+                    </bean>
+                </property>
+            </bean>
+        </property>
     </bean>
+
 
     <bean id="authenticator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
         <property name="authenticationStrategy">
@@ -114,23 +127,28 @@
         <property name="successUrl" value="/view/index.jsp"/>
         <!--登录后权限不足跳转的页面-->
         <property name="unauthorizedUrl" value="/view/error/unauthorized.jsp"/>
-        <!--设置拦截规则-->
-        <property name="filterChainDefinitions">
-            <value>
-                <!--url路径=拦截规则 anon匿名 authc需登录-->
-                <!--注意：规则是有顺序的，从上到下，拦截范围从小到打，匹配的顺序是从上到下的，匹配到之后后面的规则会忽略-->
-                /favicon.ico = anon
-                /static/** = anon
-                /shiros/login.do = anon
-                /view/register.jsp = anon
-                /shiros/register.do = anon
-                /view/user/userlist.jsp = perms[userlist]
-                /view/user/adduser.jsp = perms[adduser]
-                /shiros/** = authc
-                /logout.do = logout
-                /** = authc
-            </value>
-        </property>
+        <!--设置拦截规则,xml格式写死在配置文件的方式-->
+        <!--<property name="filterChainDefinitions">-->
+            <!--<value>-->
+                <!--&lt;!&ndash;url路径=拦截规则 anon匿名 authc需登录&ndash;&gt;-->
+                <!--&lt;!&ndash;注意：规则是有顺序的，从上到下，拦截范围从小到打，匹配的顺序是从上到下的，匹配到之后后面的规则会忽略&ndash;&gt;-->
+                <!--/favicon.ico = anon-->
+                <!--/static/** = anon-->
+                <!--/shiros/login.do = anon-->
+                <!--/view/register.jsp = anon-->
+                <!--/shiros/register.do = anon-->
+                <!--/view/user/userlist.jsp = perms[userlist]-->
+                <!--/view/user/adduser.jsp = perms[adduser]-->
+                <!--/shiros/** = authc-->
+                <!--/logout.do = logout-->
+                <!--/** = authc-->
+            <!--</value>-->
+        <!--</property>-->
+        <!--设置拦截规则,权限规则来自数据库-->
+        <property name="filterChainDefinitionMap" ref="filterChainDefinitionMap" />
     </bean>
+
+    <bean id="filterChainDefinitionMap" factory-bean="filterChainDefinitionMapFactory" factory-method="getFilterChainDefinitionMap"/>
+    <bean id="filterChainDefinitionMapFactory" class="com.reignzzz.mavenssm.shiro.FilterChainDefinitionMapFactory"/>
 
 </beans>

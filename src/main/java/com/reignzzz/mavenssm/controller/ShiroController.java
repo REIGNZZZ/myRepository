@@ -2,7 +2,6 @@ package com.reignzzz.mavenssm.controller;
 
 import com.reignzzz.mavenssm.entity.User;
 import com.reignzzz.mavenssm.service.UserService;
-import com.reignzzz.mavenssm.utils.AESUtil;
 import com.reignzzz.mavenssm.utils.UUIDUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -37,10 +36,13 @@ public class ShiroController {
     }
 
     @RequestMapping(value = "/login.do", method = RequestMethod.POST)
-    public String login(User user, HttpServletResponse response, HttpSession session) {
+    public String login(User user, Integer rememberMe, HttpServletResponse response, HttpSession session) {
         try {
             Subject subject = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), user.getPassword());
+            if (rememberMe != null && rememberMe == 1) {
+                token.setRememberMe(true);
+            }
             subject.login(token);
         } catch (AuthenticationException e) {
             e.printStackTrace();
@@ -59,6 +61,13 @@ public class ShiroController {
         user.setStatus(USER_STATUS_UNLOCK);
         userService.addUser(user);
         return "index";
+    }
+
+    @RequestMapping(value = "/logout.do")
+    public String logout() {
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
+        return "redirect:login.do";
     }
 
 }
