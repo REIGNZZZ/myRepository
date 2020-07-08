@@ -18,7 +18,7 @@
 
     <context:property-placeholder location="classpath:jdbc.properties" />
 
-    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
         <property name="driverClass" value="${jdbc.driver}"/>
         <property name="jdbcUrl" value="${jdbc.url}"/>
         <property name="user" value="${jdbc.user}"/>
@@ -58,7 +58,26 @@
     <!--shiro 核心组件-->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <property name="cacheManager" ref="cacheManager"/>
-        <property name="realm" ref="shiroRealm"/>
+        <!--
+            配置realm的认证策略，
+            【注意】authenticator必须配置再realms之前，原因未研究。。。
+        -->
+        <property name="authenticator" ref="authenticator"/>
+        <!--配置单个realm-->
+        <!--<property name="realm" ref="shiroRealm"/>-->
+        <!--配置多个realm-->
+        <property name="realms">
+            <list>
+                <ref bean="shiroRealm"/>
+                <ref bean="shiroRealm2"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="authenticator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
+        <property name="authenticationStrategy">
+            <bean class="org.apache.shiro.authc.pam.AllSuccessfulStrategy"/>
+        </property>
     </bean>
 
     <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
@@ -67,11 +86,20 @@
 
     <bean id="shiroRealm" class="com.reignzzz.mavenssm.shiro.ShiroRealm">
         <property name="credentialsMatcher" >
-            <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+            <!--使用shiro的密码验证规则-->
+            <!--<bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
                 <property name="hashAlgorithmName" value="MD5"/>
                 <property name="hashIterations" value="1024" />
                 <property name="storedCredentialsHexEncoded" value="true"/>
-            </bean>
+            </bean>-->
+            <!--使用自定义的密码验证规则-->
+            <bean class="com.reignzzz.mavenssm.shiro.CustomCredentialsMatcher" />
+        </property>
+    </bean>
+
+    <bean id="shiroRealm2" class="com.reignzzz.mavenssm.shiro.ShiroRealm2">
+        <property name="credentialsMatcher" >
+            <bean class="com.reignzzz.mavenssm.shiro.CustomCredentialsMatcher2" />
         </property>
     </bean>
 
@@ -81,24 +109,25 @@
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
         <!--登录页面，未登录情况会跳转至该页面-->
-        <property name="loginUrl" value="/shiros/get/login.do"/>
+        <property name="loginUrl" value="/shiros/login.do"/>
         <!--登录成功后跳转的页面-->
-        <property name="successUrl" value="/shiros/index.do"/>
+        <property name="successUrl" value="/view/index.jsp"/>
         <!--登录后权限不足跳转的页面-->
-        <property name="unauthorizedUrl" value="/unauthorized.do"/>
+        <property name="unauthorizedUrl" value="/view/error/unauthorized.jsp"/>
         <!--设置拦截规则-->
         <property name="filterChainDefinitions">
             <value>
                 <!--url路径=拦截规则 anon匿名 authc需登录-->
                 <!--注意：规则是有顺序的，从上到下，拦截范围从小到打，匹配的顺序是从上到下的，匹配到之后后面的规则会忽略-->
                 /favicon.ico = anon
-                /shiros/post/login.do = anon
-                /shiros/get/login.do = anon
-                /shiros/register.do = anon
                 /static/** = anon
-                /register.jsp = anon
-                /logout.do = logout
+                /shiros/login.do = anon
+                /view/register.jsp = anon
+                /shiros/register.do = anon
+                /view/user/userlist.jsp = perms[userlist]
+                /view/user/adduser.jsp = perms[adduser]
                 /shiros/** = authc
+                /logout.do = logout
                 /** = authc
             </value>
         </property>

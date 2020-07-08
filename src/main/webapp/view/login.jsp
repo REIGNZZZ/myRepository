@@ -60,13 +60,13 @@
 <body>
     我是登录页<br><br>
     <input id="uuidSalt" value="${uuidSalt}" /><br><br>
-<form action="${pageContext.request.contextPath}/shiros/post/login.do" method="post" onsubmit="checkSubmit()">
+<form action="${pageContext.request.contextPath}/shiros/login.do" method="post" onsubmit="checkSubmit()">
     用户名：<input type="text" name="username"><br><br>
     密&nbsp;&nbsp;&nbsp;码：<input id="pwd" type="password" name="password"><br><br>
     <input type="submit" value="登录">
 </form>
 <br><br>
-没有账号？<a href="${pageContext.request.contextPath}/register.jsp">申请账号</a>
+没有账号？<a href="${pageContext.request.contextPath}/view/register.jsp">申请账号</a>
 
 </body>
 </html>

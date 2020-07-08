@@ -27,38 +27,29 @@ public class ShiroController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/get/login.do", method = RequestMethod.GET)
+    @RequestMapping(value = "/login.do", method = RequestMethod.GET)
     public String login(Model model, HttpSession session) {
         String code = UUIDUtil.getUUID16Bits();
         model.addAttribute("uuidSalt", code);
         session.setAttribute("uuidSalt", code);
         System.out.println(code);
-
-
         return "login";
     }
 
-    @RequestMapping(value = "/post/login.do", method = RequestMethod.POST)
+    @RequestMapping(value = "/login.do", method = RequestMethod.POST)
     public String login(User user, HttpServletResponse response, HttpSession session) {
         try {
             Subject subject = SecurityUtils.getSubject();
-            String key = (String) session.getAttribute("uuidSalt");
-            String iv = (String) session.getAttribute("uuidSalt");
-            String password = AESUtil.decrypt(user.getPassword(), key, iv);
-            UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), password);
+            UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), user.getPassword());
             subject.login(token);
         } catch (AuthenticationException e) {
             e.printStackTrace();
-            return "loginError";
+            return "error/loginError";
         } catch (Exception e) {
             e.printStackTrace();
+            return "error/loginError";
         }
-        return "redirect:/shiros/index.do";
-    }
-
-    @RequestMapping(value = "/index.do")
-    public String index() {
-        return "index";
+        return "redirect:/view/index.jsp";
     }
 
     @RequestMapping(value = "/register.do")
@@ -67,7 +58,7 @@ public class ShiroController {
         user.setPassword(simpleHash.toString());
         user.setStatus(USER_STATUS_UNLOCK);
         userService.addUser(user);
-        return "forward:index.do";
+        return "index";
     }
 
 }
