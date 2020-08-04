@@ -15,6 +15,7 @@ public class User implements Serializable {
     private int status;
     private String opLog;
     private String faceId;
+    private String photoURL;
     private Set<Role> roles;
 
     public Long getId() {
@@ -91,6 +92,14 @@ public class User implements Serializable {
 
     public Set<Role> getRoles() {
         return roles;
+    }
+
+    public String getPhotoURL() {
+        return photoURL;
+    }
+
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
     }
 
     public void setRoles(Set<Role> roles) {

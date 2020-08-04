@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import static com.reignzzz.mavenssm.constant.constant.USER_STATUS_UNLOCK;
+import static com.reignzzz.mavenssm.constant.Constant.USER_STATUS_UNLOCK;
 
 @Controller
 @RequestMapping(value = "/shiros")
@@ -32,7 +32,7 @@ public class ShiroController {
         model.addAttribute("uuidSalt", code);
         session.setAttribute("uuidSalt", code);
         System.out.println(code);
-        return "login";
+        return "forward:/view/login.jsp";
     }
 
     @RequestMapping(value = "/login.do", method = RequestMethod.POST)
@@ -60,7 +60,7 @@ public class ShiroController {
         user.setPassword(simpleHash.toString());
         user.setStatus(USER_STATUS_UNLOCK);
         userService.addUser(user);
-        return "index";
+        return "forward:/view/index.jsp";
     }
 
     @RequestMapping(value = "/logout.do")

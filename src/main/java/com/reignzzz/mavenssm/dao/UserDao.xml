@@ -10,4 +10,12 @@
     <insert id="insertUser" parameterType="user">
         insert into p_user(username,password,phone,createTime,type,status,opLog,faceId)values (#{username},#{password},#{phone},#{createTime},#{type},#{status},#{opLog},#{faceId})
     </insert>
+
+    <update id="updatePhotoURL" parameterType="String">
+        update p_user set photoURL = #{savePath} where username = #{username}
+    </update>
+
+    <select id="selectById" resultType="user">
+        select * from p_user where id=#{id}
+    </select>
 </mapper>

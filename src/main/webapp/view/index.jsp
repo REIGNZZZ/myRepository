@@ -11,6 +11,26 @@
 <head>
     <title>首页</title>
 </head>
+<script src="${pageContext.request.contextPath}/static/js/jquery/jquery-1.11.1-min.js"></script>
+<script>
+    $(function () {
+        $.ajax({
+            url:'${pageContext.request.contextPath}/users/getCurrentUser.do',
+            type:'get',
+            success:function (data) {
+                var a = "/"+data.data.photoURL;
+
+                $("#userPhoto").attr("src", a);
+            },
+            error:function (e) {
+
+            }
+        })
+    })
+
+
+
+</script>
 <body>
     我是首页<br><br>
 <a href="${pageContext.request.contextPath}/shiros/logout.do">退出</a>
@@ -22,6 +42,14 @@
     <shiro:guest>
         <p>测试shiro标签，仅游客可见</p>
     </shiro:guest>
+
+<form action="${pageContext.request.contextPath}/users/uploadPhoto.do" method="post" enctype="multipart/form-data">
+    <input type="file" name="userphoto"><br><br>
+    <input type="text" name="abc"><br><br>
+    <input type="submit" value="上传头像">
+</form>
+<br><br>
+<img id="userPhoto">
 
 
 </body>

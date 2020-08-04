@@ -15,4 +15,12 @@ public class UserServiceImpl implements UserService {
     public void addUser(User user) {
         userDao.insertUser(user);
     }
+
+    public int updatePhotoURL(String savePath,String username) {
+        return userDao.updatePhotoURL(savePath,username);
+    }
+
+    public User getById(Long id) {
+        return userDao.selectById(id);
+    }
 }
